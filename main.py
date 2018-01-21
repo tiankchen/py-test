@@ -66,9 +66,36 @@ def login_by_private_key():
 
 # upload file to remote host
 def put_file():
-    pass
+    hostname = '192.168.1.8'
+    port = 22
+    username = 'root'
+    password = 'password'
+    local_path = 'main.py'
+    remote_path = '/tmp/workspace/main.py'
+    if not os.path.isfile(local_path):
+        raise IOError('File %s not exists.' % local_path)
+
+    try:
+        s = paramiko.Transport((hostname, port))
+        s.connect(username=username, password=password)
+        sftp = paramiko.SFTPClient.from_transport(s)
+
+        # 使用put()方法把本地文件上传到远程服务器
+        sftp.put(local_path, remote_path)
+
+        # 简单测试是否上传成功try:
+        # 如果远程主机有这个文件则返回一个对象，否则抛出异常
+        sftp.file(remote_path)
+        print 'Put file %s success.' % local_path
+    except IOError, e:
+        print e
+    except Exception, e:
+        print e
+    finally:
+        s.close()
 
 
 if __name__ == "__main__":
     # exe_cmd_on_remote()
-    login_by_private_key()
+    # login_by_private_key()
+    put_file()
