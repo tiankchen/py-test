@@ -1,0 +1,3 @@
+[update-env]
+yum-repo-163=yes
+yum-repo-epel=no
